@@ -1,5 +1,6 @@
 package com.example.directoriofuncionarios.config;
 
+import com.example.directoriofuncionarios.auth.LoginAuthenticationEntryPoint;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -12,7 +13,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(HomeController.class)
-@Import(SecurityConfig.class)
+@Import({SecurityConfig.class, LoginAuthenticationEntryPoint.class})
 @TestPropertySource(properties = {"app.security.username=test-admin", "app.security.password=test-secret"})
 class HomeControllerTest {
 

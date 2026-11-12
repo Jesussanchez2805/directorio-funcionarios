@@ -2,6 +2,7 @@ const AUTH_STORAGE_KEY = "directorio.auth";
 const loginForm = document.querySelector("#login-form");
 const loginError = document.querySelector("#login-error");
 const submitButton = document.querySelector("#submit-button");
+let lockoutTimer;
 
 if (sessionStorage.getItem(AUTH_STORAGE_KEY)) {
     window.location.replace("/index.html");
@@ -12,6 +13,25 @@ function encodeBasicCredentials(username, password) {
     let binary = "";
     for (const byte of bytes) binary += String.fromCharCode(byte);
     return `Basic ${btoa(binary)}`;
+}
+
+function startLockoutCountdown(seconds) {
+    let remaining = seconds;
+    submitButton.disabled = true;
+    submitButton.textContent = `Espera ${remaining} s`;
+
+    window.clearInterval(lockoutTimer);
+    lockoutTimer = window.setInterval(() => {
+        remaining -= 1;
+        if (remaining <= 0) {
+            window.clearInterval(lockoutTimer);
+            submitButton.disabled = false;
+            submitButton.textContent = "Iniciar sesión";
+            loginError.textContent = "Ya puedes volver a intentarlo.";
+            return;
+        }
+        submitButton.textContent = `Espera ${remaining} s`;
+    }, 1000);
 }
 
 loginForm.addEventListener("submit", async (event) => {
@@ -30,11 +50,12 @@ loginForm.addEventListener("submit", async (event) => {
             headers: { Authorization: authorization }
         });
 
-        if (response.status === 401) {
-            throw new Error("Usuario o contraseña incorrectos.");
-        }
         if (!response.ok) {
-            throw new Error(`No fue posible validar las credenciales (${response.status}).`);
+            const body = await response.json().catch(() => ({}));
+            const error = new Error(body.error || `No fue posible validar las credenciales (${response.status}).`);
+            error.status = response.status;
+            error.retryAfter = Number(response.headers.get("Retry-After")) || Number(body.segundosEspera) || 0;
+            throw error;
         }
 
         sessionStorage.setItem(AUTH_STORAGE_KEY, authorization);
@@ -44,7 +65,11 @@ loginForm.addEventListener("submit", async (event) => {
             ? "No se pudo conectar con el servidor. Intenta nuevamente."
             : error.message;
         loginError.hidden = false;
-        submitButton.disabled = false;
-        submitButton.textContent = "Iniciar sesión";
+        if (error.status === 429 && error.retryAfter > 0) {
+            startLockoutCountdown(error.retryAfter);
+        } else {
+            submitButton.disabled = false;
+            submitButton.textContent = "Iniciar sesión";
+        }
     }
 });

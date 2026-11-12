@@ -11,6 +11,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.List;
+import com.example.directoriofuncionarios.auth.LoginAuthenticationEntryPoint;
+import com.example.directoriofuncionarios.config.SecurityConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -23,7 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.server.ResponseStatusException;
 
 @WebMvcTest(FuncionarioController.class)
-@Import({ApiExceptionHandler.class, com.example.directoriofuncionarios.config.SecurityConfig.class})
+@Import({ApiExceptionHandler.class, SecurityConfig.class, LoginAuthenticationEntryPoint.class})
 @TestPropertySource(properties = {"app.security.username=test-admin", "app.security.password=test-secret"})
 class FuncionarioControllerTest {
 

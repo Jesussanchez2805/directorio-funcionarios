@@ -4,6 +4,8 @@ Aplicación MVC construida con Java 21, Spring Boot, Spring Data JPA y MySQL. La
 
 El acceso a la API está protegido con Spring Security y HTTP Basic. Al abrir la aplicación, la ruta principal presenta la pantalla de inicio de sesión; el formulario valida las credenciales antes de abrir el directorio.
 
+El acceso se bloquea durante 30 segundos después de tres contraseñas incorrectas consecutivas. El bloqueo se aplica en el servidor, se muestra una cuenta regresiva en el formulario y un inicio de sesión exitoso reinicia el contador. Los intentos se mantienen en memoria y se reinician al reiniciar la aplicación.
+
 ## Requisitos
 
 - Java 21

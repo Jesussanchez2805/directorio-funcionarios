@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Directorio de funcionarios de la organización">
+    <title>Directorio de funcionarios</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/app.js" defer></script>
+</head>
+<body>
+<header class="site-header">
+    <div class="header-content">
+        <div class="brand-mark" aria-hidden="true">DF</div>
+        <div>
+            <p class="eyebrow">GESTIÓN INSTITUCIONAL</p>
+            <h1>Directorio de funcionarios</h1>
+        </div>
+        <button type="button" class="button button-header" id="logout-button">Cerrar sesión</button>
+    </div>
+</header>
+
+<main class="page-content">
+    <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+
+    <section class="panel form-panel" aria-labelledby="form-title">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">REGISTRO</p>
+                <h2 id="form-title">Nuevo funcionario</h2>
+            </div>
+            <span id="form-mode" class="mode-badge">Nuevo</span>
+        </div>
+        <form id="employee-form">
+            <input id="employee-id" name="id" type="hidden">
+            <div class="form-grid">
+                <label>Nombre
+                    <input id="nombre" name="nombre" type="text" maxlength="255" required autocomplete="name"
+                           placeholder="Nombre completo">
+                </label>
+                <label>Cargo
+                    <input id="cargo" name="cargo" type="text" maxlength="255" required
+                           placeholder="Cargo o función">
+                </label>
+                <label>Departamento
+                    <input id="departamento" name="departamento" type="text" maxlength="255" required
+                           placeholder="Área de trabajo">
+                </label>
+                <label>Teléfono <span class="optional">(opcional)</span>
+                    <input id="telefono" name="telefono" type="tel" maxlength="255" autocomplete="tel"
+                           placeholder="Número de contacto">
+                </label>
+            </div>
+            <div class="form-actions">
+                <button class="button button-primary" type="submit" id="save-button">Guardar funcionario</button>
+                <button class="button button-secondary" type="reset" id="clear-button">Limpiar formulario</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="panel directory-panel" aria-labelledby="directory-title">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">DIRECTORIO</p>
+                <h2 id="directory-title">Funcionarios</h2>
+            </div>
+            <button type="button" class="button button-secondary button-small" id="show-all">Ver todos</button>
+        </div>
+
+        <div class="search-grid">
+            <form id="id-search-form" class="search-form">
+                <label for="id-search">Consultar por ID</label>
+                <div class="search-control">
+                    <input id="id-search" type="number" min="1" step="1" placeholder="Ej. 12" required>
+                    <button class="button button-search" type="submit">Consultar</button>
+                </div>
+            </form>
+            <form id="filter-form" class="search-form">
+                <label for="name-filter">Buscar por nombre o departamento</label>
+                <div class="search-control">
+                    <input id="name-filter" type="search" placeholder="Nombre parcial">
+                    <input id="department-filter" type="search" placeholder="Departamento exacto">
+                    <button class="button button-search" type="submit">Buscar</button>
+                </div>
+                <span class="field-hint">Si completas ambos filtros, se prioriza el nombre.</span>
+            </form>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Cargo</th>
+                    <th scope="col">Departamento</th>
+                    <th scope="col">Teléfono</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+                </thead>
+                <tbody id="employee-rows"></tbody>
+            </table>
+            <p id="empty-state" class="empty-state" hidden>No hay funcionarios para mostrar.</p>
+        </div>
+    </section>
+</main>
+<footer>Directorio de funcionarios <span aria-hidden="true">·</span> Gestión centralizada</footer>
+</body>
+</html>
